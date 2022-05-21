@@ -1,5 +1,6 @@
 const { readdir, mkdir, copyFile, readFile, writeFile, rm } = require('fs/promises');
 const { join, extname, basename } = require('path');
+const { createWriteStream, createReadStream } = require('fs');
 
 buildPage();
 
@@ -103,7 +104,14 @@ async function copyDir(from , to, newFolderName){
       if(file.isFile()){
         const oldFile = join(from, file.name);
         const newFile = join(newDir, file.name);
-        await copyFile(oldFile, newFile);
+
+        const input = createReadStream(oldFile);
+        input.on('error', (err) => console.log(err));
+        
+        const output = createWriteStream(newFile);
+        output.on('error', (err) => console.log(err));
+
+        input.pipe(output);
       }
     }
 
