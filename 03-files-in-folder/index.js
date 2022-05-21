@@ -34,5 +34,5 @@ async function getFileStats(file){
 }
 
 function showFileStats(name, extension, size){
-  stdout.write(`${name} - ${extension.slice(1)} - ${size/1024}kb \n`);
+  stdout.write(`${ name } - ${ extension.slice(1) } - ${ (size/1024).toFixed(3) }kb  \n`);
 }
