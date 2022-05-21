@@ -1,15 +1,18 @@
-const { readdir, readFile, writeFile } = require('fs/promises');
+const { readdir } = require('fs/promises');
 const { join, extname } = require('path');
+
+const { createWriteStream, createReadStream } = require('fs');
 
 buildBundle();
 
 async function buildBundle(){
 
   const sourceDirPath = join(__dirname, 'styles');
+  const destDirPath = join(__dirname, '/project-dist', 'bundle.css');
+  const output = createWriteStream(destDirPath);
 
   try{
     const files = await readdir(sourceDirPath, {withFileTypes: true});
-    let cssArr = [];
 
     for (let file of files){
       const currentSourceFile = join(sourceDirPath, file.name);
@@ -17,16 +20,10 @@ async function buildBundle(){
 
       if(ext === '.css' && file.isFile()){
 
-        try{
-          const fileContents = await readFile(currentSourceFile);
-          cssArr.push(fileContents);
-        } catch(err) {
-          console.log(err);
-        }
+        const input = createReadStream(currentSourceFile);
+        input.pipe(output);
       }
     }
-
-    await writeFile(join(__dirname, '/project-dist', 'bundle.css'), cssArr);
 
   } catch(err){
     console.log(err);
