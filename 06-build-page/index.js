@@ -1,4 +1,4 @@
-const { readdir, mkdir, copyFile, readFile, writeFile, rm } = require('fs/promises');
+const { readdir, mkdir, readFile, writeFile, rm } = require('fs/promises');
 const { join, extname, basename } = require('path');
 const { createWriteStream, createReadStream } = require('fs');
 
@@ -57,8 +57,6 @@ async function fillTemplates(templateFile, templateDir, destinationFilePath){
 }
 
 
-
-
 async function buildBundle(sourceDir, bundleName){
 
   const sourceDirPath = join(__dirname, sourceDir);
@@ -107,7 +105,7 @@ async function copyDir(from , to, newFolderName){
 
         const input = createReadStream(oldFile);
         input.on('error', (err) => console.log(err));
-        
+
         const output = createWriteStream(newFile);
         output.on('error', (err) => console.log(err));
 
